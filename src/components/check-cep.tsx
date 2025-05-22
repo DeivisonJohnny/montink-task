@@ -21,7 +21,6 @@ export default function CepChecker() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Formata o CEP enquanto o usuário digita
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, "");
 
@@ -35,7 +34,6 @@ export default function CepChecker() {
 
     setCep(value);
 
-    // Limpa os resultados anteriores quando o usuário começa a digitar novamente
     if (value.length < 9) {
       setAddress(null);
       setError("");
@@ -43,7 +41,6 @@ export default function CepChecker() {
   };
 
   const checkCep = async () => {
-    // Remove caracteres não numéricos para a consulta
     const cleanCep = cep.replace(/\D/g, "");
 
     if (cleanCep.length !== 8) {
@@ -83,7 +80,7 @@ export default function CepChecker() {
             value={cep}
             onChange={handleCepChange}
             placeholder="Digite seu CEP"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-black"
             maxLength={9}
           />
         </div>
