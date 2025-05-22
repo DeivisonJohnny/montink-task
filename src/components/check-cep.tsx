@@ -1,9 +1,10 @@
 "use client";
 
+import Utils from "@/utils/utils";
 import { Loader2 } from "lucide-react";
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface CepResponse {
   cep: string;
@@ -20,6 +21,8 @@ export default function CepChecker() {
   const [address, setAddress] = useState<CepResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const EXPIRY_TIME = 15 * 60 * 1000;
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, "");
@@ -61,6 +64,7 @@ export default function CepChecker() {
         setError("CEP não encontrado");
         setAddress(null);
       } else {
+        Utils.setWithExpiry("cep", data, EXPIRY_TIME);
         setAddress(data);
       }
     } catch (err) {
@@ -70,6 +74,16 @@ export default function CepChecker() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const data = Utils.getWithExpiry("cep");
+
+    if (data) {
+      setAddress(data);
+      console.log(data);
+      setCep(data?.cep);
+    }
+  }, []);
 
   return (
     <div>

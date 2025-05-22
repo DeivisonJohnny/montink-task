@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Check, Truck } from "lucide-react";
 import CepChecker from "@/components/check-cep";
+import Utils from "@/utils/utils";
+
+const EXPIRY_TIME = 15 * 60 * 1000;
 
 const product = {
   name: "Camisa Feminina Casual",
@@ -62,6 +65,31 @@ export default function ProductPage() {
     }
   }, [selectedColor]);
 
+  function handleChangeColor(id: number) {
+    setSelectedColor(id);
+
+    Utils.setWithExpiry("selectedColor", id, EXPIRY_TIME);
+  }
+
+  function handleChangeSize(id: number) {
+    setSelectedSize(id);
+
+    Utils.setWithExpiry("selectedSize", id, EXPIRY_TIME);
+  }
+
+  useEffect(() => {
+    const colorSelected = Utils.getWithExpiry("selectedColor");
+    const sizeSelected = Utils.getWithExpiry("selectedSize");
+
+    if (colorSelected) {
+      setSelectedColor(colorSelected);
+    }
+
+    if (sizeSelected) {
+      setSelectedSize(sizeSelected);
+    }
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -115,7 +143,7 @@ export default function ProductPage() {
               {product.variants.map((variant) => (
                 <button
                   key={variant.colorId}
-                  onClick={() => setSelectedColor(variant.colorId)}
+                  onClick={() => handleChangeColor(variant.colorId)}
                   className={`relative w-12 h-12 rounded-full border-2 ${
                     selectedColor === variant.colorId
                       ? "border-neutral-500"
@@ -153,7 +181,7 @@ export default function ProductPage() {
               {product.sizes.map((size) => (
                 <button
                   key={size.id}
-                  onClick={() => setSelectedSize(size.id)}
+                  onClick={() => handleChangeSize(size.id)}
                   className={`w-12 h-12 flex items-center justify-center rounded-md border ${
                     selectedSize === size.id
                       ? "border-neutral-900 bg-neutral-900 text-white"
@@ -180,7 +208,6 @@ export default function ProductPage() {
             <CepChecker />
           </div>
 
-          {/* Botão de compra */}
           <button className="w-full py-3 px-4 bg-neutral-900 text-white rounded-md font-medium hover:bg-neutral-800 transition-colors">
             Finalizar compra
           </button>
