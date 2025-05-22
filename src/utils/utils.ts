@@ -1,5 +1,5 @@
 export default class Utils {
-  static setWithExpiry = (key: string, value: any, ttl: number) => {
+  static setWithExpiry = <T>(key: string, value: T, ttl: number) => {
     const now = new Date();
     const item = {
       value: value,

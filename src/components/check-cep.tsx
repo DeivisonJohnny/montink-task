@@ -68,6 +68,7 @@ export default function CepChecker() {
         setAddress(data);
       }
     } catch (err) {
+      console.log(err);
       setError("Erro ao consultar o CEP. Tente novamente.");
       setAddress(null);
     } finally {
